@@ -3,22 +3,21 @@ file1 = open('input.txt', 'r')
 lines = file1.readlines()
 
 def countEquals(mat1, mat2):
-    arr1 = [np.ravel(mat1[0,:]), np.ravel(mat1[0,::-1]),
-            np.ravel(mat1[-1,:]), np.ravel(mat1[-1,::-1]),
-            np.ravel(mat1[:,0]), np.ravel(mat1[::-1,0]),
-            np.ravel(mat1[:,-1]), np.ravel(mat1[::-1,-1])]
+    arr1 = [np.ravel(mat1[0,:]), 
+            np.ravel(mat1[-1,:]), 
+            np.ravel(mat1[:,0]),
+            np.ravel(mat1[:,-1])]
     
     arr2 = [np.ravel(mat2[0,:]), np.ravel(mat2[0,::-1]),
             np.ravel(mat2[-1,:]), np.ravel(mat2[-1,::-1]),
             np.ravel(mat2[:,0]), np.ravel(mat2[::-1,0]),
             np.ravel(mat2[:,-1]), np.ravel(mat2[::-1,-1])]
     
-    res = 0
     for a1 in arr1:
         for a2 in arr2:
             if np.array_equal(a1, a2):
-                res += 1
-    return res
+                return True
+    return False
 
 mats = dict()
 
@@ -39,7 +38,7 @@ for i in mats:
     for j in mats:
         if i==j:
             continue
-        if countEquals(mats[i], mats[j]) > 0:
+        if countEquals(mats[i], mats[j]) :
             count += 1
     if count == 2:
         res *= i
