@@ -3,6 +3,13 @@ lines = file1.readlines()
 
 def step(timeRem, ore, clay, obs, geo, robots, res):
     global maxx, hist
+    if res[0] > 2*max(ore,clay,obs[0],geo[0]):
+        res[0] = max(ore,clay,obs[0],geo[0])
+    if res[1] > 2*obs[1]:
+        res[1] = obs[1]
+    if res[2] > 2*geo[1]:
+        res[2] = geo[1]
+
     if tuple([timeRem]+robots+res) in hist:
         return
     else:
@@ -16,7 +23,6 @@ def step(timeRem, ore, clay, obs, geo, robots, res):
     if timeRem == 0:
         if res[-1] > maxx:
             maxx = res[-1]
-            print(maxx)
         return
     count = 0
     if res[0] >= geo[0] and res[2] >= geo[1]:
@@ -27,14 +33,14 @@ def step(timeRem, ore, clay, obs, geo, robots, res):
             newRes[i] += robots[i]
         step(timeRem - 1, ore, clay, obs, geo, newRobots, newRes)
     else:
-        if res[0] >= ore and robots[0] <= max(ore,clay,obs[0],geo[0]) and res[0] <= max(ore,clay,obs[0],geo[0]):
+        if res[0] >= ore and robots[0] <= max(ore,clay,obs[0],geo[0]):
             count += 1
             newRes = [res[0]-ore, res[1], res[2], res[3]]
             newRobots = [robots[0]+1, robots[1], robots[2], robots[3]]
             for i in range(4):
                 newRes[i] += robots[i]
             step(timeRem - 1, ore, clay, obs, geo, newRobots, newRes)
-        if res[0] >= clay and robots[1] <= obs[1] and res[1] <= obs[1]:
+        if res[0] >= clay and robots[1] <= obs[1]:
             count += 1
             newRes = [res[0]-clay, res[1], res[2], res[3]]
             newRobots = [robots[0], robots[1]+1, robots[2], robots[3]]
@@ -53,8 +59,11 @@ def step(timeRem, ore, clay, obs, geo, robots, res):
             res[i] += robots[i]
         step(timeRem-1, ore, clay, obs, geo, robots, res)
         
-result = 0
+
+prd = 1
 for i,line in enumerate([line.strip().split(' ') for line in lines]):
+    if i == 3:
+        break
     ore = int(line[6])
     clay = int(line[12])
     obs = [int(line[18]), int(line[21])]
@@ -65,6 +74,5 @@ for i,line in enumerate([line.strip().split(' ') for line in lines]):
     maxx = 0
     hist = set()
     step(32,ore,clay,obs,geo,robots,res)
-    print(maxx)
-    result += (i+1) * maxx
-print(result)
+    prd *= maxx
+print(prd)
